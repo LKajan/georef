@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}
+	MIL-kuvat - Kartta
+{% endblock %}
+
+{% block includes %}
+        <link rel="stylesheet" href="{% static "jcarouselOma.css" %}">
+	        <link rel="stylesheet" href="{% static "leaflet/leaflet.css" %}">
+	        
+			<script type="text/javascript" src="{% static "leaflet/leaflet-src.js" %}"></script>
+		<script type="text/javascript" src="{% static "proj4js/proj4-compressed.js" %}"></script>
+		<script type="text/javascript" src="{% static "proj4js/proj4leaflet.js" %}"></script>
+		
+		<script type="text/javascript" src="{% static "jcarousel/jquery.jcarousel.js" %}"></script>
+		<script type="text/javascript" src="{% static "jcarouselOma.js" %}"></script>
+		
+		<script type="text/javascript" src="{% static "omasrs.js" %}"></script>
+		<script type="text/javascript" src="{% static "karttaselaus.js" %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="row" id="container">
+	<div class="col-sm-9 col-lg-9" id="map"></div>
+	<div class="col-sm-3 col-lg-3" id="sidebar">
+		<div id="kartanKuvat" class="row">
+			<h3>Kartan alueella olevat kuvat</h3>
+	        <div class="wrapper">
+	            <div class="jcarousel-wrapper">
+	                <div class="jcarousel">
+	                	<div class="loading">Ladataan kuvia</div>
+	                </div>
+					<!-- >a class="left carousel-control jcarousel-control-prev" href="#">
+				    	<span class="glyphicon glyphicon-chevron-left"></span>
+				  	</a>
+				  	<a class="right carousel-control jcarousel-control-next" href="#">
+				    	<span class="glyphicon glyphicon-chevron-right"></span>
+				  	</a-->
+	                <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
+	                <a href="#" class="jcarousel-control-next">&rsaquo;</a>
+	                <p class="jcarousel-pagination"></p>
+	            </div>
+	        </div>
+		</div>
+		<div class="row" id="kuvaInfo">
+		</div>
+		
+		<div id="kuvatEiSijaintia"></div>
+	</div>
+</div><!-- /.container -->
+
+<!-- Modal -->
+<div class="modal fade" id="isoKuvaDialog" tabindex="-1" role="dialog" aria-labelledby="isoKuvaLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Iso kuva</h4>
+      </div>
+      <div class="modal-body" id="isoKuvaContainer">
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Sulje</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+    var kuvaUrl = "{% url 'kuvat.views.imagesGeojson' %}";
+</script>
+
+{% endblock %}

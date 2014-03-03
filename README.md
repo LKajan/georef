@@ -1,4 +1,2 @@
-georef
-======
-
-georef
+GeoRef
+===============

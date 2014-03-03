@@ -1,0 +1,44 @@
+[
+  {
+    "model": "kuvat.KuvaTyyppi",
+    "pk": 1,
+    "fields": {
+      "tyyppi": "vk"
+    }
+  },
+    {
+    "model": "kuvat.KuvaTyyppi",
+    "pk": 2,
+    "fields": {
+      "tyyppi": "kk"
+    }
+  },
+      {
+    "model": "kuvat.KuvaTyyppi",
+    "pk": 3,
+    "fields": {
+      "tyyppi": "ik"
+    }
+  },
+  {
+    "model": "kuvat.Kuva",
+    "pk": 1,
+    "fields": {
+      "name": "Santahamina yleiskuva",
+      "jpgImage": "mil/yleiskuva.jpg",
+      "orginalFilePath": "testiorginal.tif",
+      "tyyppi" : "1"
+    }
+  },
+  {
+    "model": "kuvat.Kuva",
+    "pk": 2,
+    "fields": {
+      "name": "Santahaminan lentokonehallit",
+      "jpgImage": "mil/testi.jpg",
+      "orginalFilePath": "testiorginal.tif",
+      "geom":"POLYGON((390914.440 6669737.743, 391259.238 6669654.156, 391045.045 6669266.258, 390823.017 6669550.978, 390914.440 6669737.743))",
+      "tyyppi" : "1"
+    }
+  }
+]

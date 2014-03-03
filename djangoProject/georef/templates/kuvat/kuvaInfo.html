@@ -1,0 +1,8 @@
+{% load thumbnail %}
+
+<h3>{{ kuva.name }}</h3>
+{% thumbnail kuva.jpgImage "x500" as im %}
+    <img class="img-responsive" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ kuva.name }}">
+{% endthumbnail %}
+
+

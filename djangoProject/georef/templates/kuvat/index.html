@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% load thumbnail %}
+
+{% block title %}
+	MIL-kuvat
+{% endblock %}
+
+{% block includes %}
+    <script type="text/javascript" src="{% static 'indexkuvat.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+	<div class="row">
+		<h1>Kuvia</h1>
+		<div id="kuvalista">
+
+		</div>
+	</div>
+</div>
+
+<script>
+$.getJSON("{% url 'kuvat.views.imagesJson' %}?height=200", paivitaKuvalista);
+</script>
+{% endblock %}

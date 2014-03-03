@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% load thumbnail %}
+
+{% load staticfiles %}
+
+{% block title %}
+	MIL-kuvat - Georeferointi
+{% endblock %}
+
+{% block includes %}
+<link rel="stylesheet" href="{% static "leaflet/draw/leaflet.draw.css" %}">
+        <link rel="stylesheet" href="{% static "jcarouselOma.css" %}">
+	        <link rel="stylesheet" href="{% static "leaflet/leaflet.css" %}">
+	        
+			<script type="text/javascript" src="{% static "leaflet/leaflet-src.js" %}"></script>
+		<script type="text/javascript" src="{% static "proj4js/proj4-compressed.js" %}"></script>
+		<script type="text/javascript" src="{% static "proj4js/proj4leaflet.js" %}"></script>
+<script type="text/javascript" src="{% static "leaflet/draw/leaflet.draw.js" %}"></script>
+		
+		<script type="text/javascript" src="{% static "jcarousel/jquery.jcarousel.js" %}"></script>
+		<script type="text/javascript" src="{% static "jcarouselOma.js" %}"></script>
+
+        <script type="text/javascript" src="{% static "omasrs.js" %}"></script>
+        <script type="text/javascript" src="{% static "georef.js" %}"></script>
+    
+{% endblock %}
+
+{% block content %}
+	<div class="row" id="kuvaHeader">
+		{{ kuva.name }}
+	</div>
+	<div class="row" id="container">
+		<div class="col-lg-6" id="imagemap"></div>
+		<div class="col-lg-6" id="map"></div>
+	</div>
+	
+	<script>
+	
+	{% thumbnail kuva.jpgImage "x600" as im %}
+	var kuvaHeight = {{ im.height }};
+	var kuvaWidth = {{ im.width }};
+	var kuvaUrl = "{{ im.url }}";
+	{% endthumbnail %}
+	</script>
+{% endblock %}
