@@ -49,7 +49,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'georef.urls'
+ROOT_URLCONF = 'djangoProject.urls'
 
 WSGI_APPLICATION = 'djangoProject.wsgi.application'
 
@@ -85,3 +85,10 @@ STATICFILES_DIRS = (
 
 MEDIA_ROOT = "C:/georef/media/"
 MEDIA_URL = '/media/'
+
+
+ALKUPERAISET = u'C:/georef/alkuperaiset'
+GEOSERVER = {'host': "http://localhost:8080/geoserver",
+      'user': 'admin',
+      'password': 'geoserver',
+      'workspace': 'georef'}

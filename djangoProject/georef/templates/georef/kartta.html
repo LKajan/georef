@@ -22,24 +22,24 @@
 {% endblock %}
 
 {% block content %}
-
-<div class="row" id="container">
-	<div class="col-sm-9 col-lg-9" id="map"></div>
-	<div class="col-sm-3 col-lg-3" id="sidebar">
-		<div id="kartanKuvat" class="row">
-			<h3>Kartan alueella olevat kuvat</h3>
-	        <div class="wrapper">
-	            <div class="jcarousel-wrapper">
-	                <div class="jcarousel">
-	                	<div class="loading">Ladataan kuvia</div>
-	                </div>
-					<!-- >a class="left carousel-control jcarousel-control-prev" href="#">
-				    	<span class="glyphicon glyphicon-chevron-left"></span>
-				  	</a>
-				  	<a class="right carousel-control jcarousel-control-next" href="#">
-				    	<span class="glyphicon glyphicon-chevron-right"></span>
-				  	</a-->
-	                <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
+<div class="container">
+	<div class="row">
+		<div class="col-sm-9 col-lg-9" id="map"></div>
+		<div class="col-sm-3 col-lg-3" id="sidebar">
+			<div id="kartanKuvat" class="row">
+				<h3>Kartan alueella olevat kuvat</h3>
+		        <div class="wrapper">
+		            <div class="jcarousel-wrapper">
+		                <div class="jcarousel">
+		                	<div class="loading">Ladataan kuvia</div>
+		                </div>
+						<!-- >a class="left carousel-control jcarousel-control-prev" href="#">
+					    	<span class="glyphicon glyphicon-chevron-left"></span>
+					  	</a>
+					  	<a class="right carousel-control jcarousel-control-next" href="#">
+					    	<span class="glyphicon glyphicon-chevron-right"></span>
+					  	</a-->
+		                <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
 	                <a href="#" class="jcarousel-control-next">&rsaquo;</a>
 	                <p class="jcarousel-pagination"></p>
 	            </div>
@@ -47,11 +47,10 @@
 		</div>
 		<div class="row" id="kuvaInfo">
 		</div>
-		
 		<div id="kuvatEiSijaintia"></div>
 	</div>
-</div><!-- /.container -->
-
+</div>
+</div>
 <!-- Modal -->
 <div class="modal fade" id="isoKuvaDialog" tabindex="-1" role="dialog" aria-labelledby="isoKuvaLabel" aria-hidden="true">
   <div class="modal-dialog">

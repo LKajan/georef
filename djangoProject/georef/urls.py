@@ -4,7 +4,6 @@ from georef.views import *
 urlpatterns = patterns('',
     url(r"^$", index),
     url(r'^kartta/', kartta),
-    url(r'^kuvat/', kuvat),
     url(r'^kuva/(\d+)$', imageInfo),
     url(r'^georef/(\d+)$', georef),
     url(r'^images.geojson$', imagesGeojson),

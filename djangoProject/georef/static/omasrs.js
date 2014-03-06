@@ -8,6 +8,7 @@ var etrstm35 = new L.Proj.CRS('EPSG:3067',
                 origin: [0, 0]
         });
 
+
 proj4.defs('EPSG:3067', '+proj=utm +zone=35 +ellps=GRS80 +units=m +no_defs +towgs84=0,0,0,0,0,0,0');
 
 L.Projection.Kuva = {
@@ -19,7 +20,7 @@ L.Projection.Kuva = {
 			return new L.LatLng(point.y, point.x);
 		},
 
-		bounds: L.bounds([0,0], [32768,32768])
+		bounds: L.bounds([0,0], [32768, 32768])
 };
 
 L.CRS.EPSG404000 = L.extend({}, L.CRS, {
@@ -28,7 +29,7 @@ L.CRS.EPSG404000 = L.extend({}, L.CRS, {
 	transformation: new L.Transformation(1, 0, -1, 0),
 
 	scale: function (zoom) {
-		return Math.pow(2, zoom);
+		return Math.pow(2, zoom) / 128;
 	},
 
 	distance: function (latlng1, latlng2) {
@@ -38,5 +39,5 @@ L.CRS.EPSG404000 = L.extend({}, L.CRS, {
 		return Math.sqrt(dx * dx + dy * dy);
 	},
 
-	infinite: true
+	infinite: false
 });

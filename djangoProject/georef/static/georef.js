@@ -8,59 +8,53 @@ var gps = [];
 var pps = [];
 
 function createMap(){
+	map = new L.Map('map', {
+	    crs: etrstm35,
+	    continuousWorld: true,
+	    worldCopyJump: false
+	});
+	map.on('click', addGP);
+	map.setView([60.1476, 25.0364], 11);
+	
 	peruskartta = L.tileLayer.wms('http://tiles.kartat.kapsi.fi/peruskartta', {
         layers: 'peruskartta',
         format: 'image/png',
         attribution: 'MML',
         continuousWorld: true
-	});
+	}).addTo(map);
+	
 	var timeInterval = '1925-07-20T00:00:00.000Z/1925-07-30T00:00:00.000Z';
-	ilmakuvat = L.tileLayer.wms('http://localhost:8080/geoserver/pomelo/wms',
-			{layers: 'pomelo:mil_mosaic',
+	ilmakuvat = L.tileLayer.wms('http://localhost:8080/geoserver/georef/wms',
+			{layers: 'georef:tausta_mosaic',
 	    format: 'image/png',
 	    continuousWorld: true,
 	    transparent: true,
 	    time: timeInterval,
-	    attribution: 'SA'});
-
-	map = new L.Map('map', {
-	    crs: etrstm35,
-	    continuousWorld: true,
-	    worldCopyJump: false,
-	    layers: [peruskartta, ilmakuvat]
-	});
-	//map.on('click', addGP);
-	map.setView([60.1476, 25.0364], 11);
+	    attribution: 'SA'}).addTo(map);
 	
 	L.control.layers({'Peruskartta': peruskartta}, {'Ilmakuvat':ilmakuvat}).addTo(map);
 }
 
 function createImagemap(){
-	var kuva = L.tileLayer.wms('http://localhost:8080/geoserver/gwc',
-			{layers: 'mil:19300527_0950',
-	    format: 'image/jpeg',
-	    continuousWorld: true,
-	    transparent: true,
-	    time: timeInterval,
-	    attribution: 'SA'});
-	
 	imagemap = L.map('imagemap', {
-		  maxZoom: 15,
 		  crs: L.CRS.EPSG404000,
 		  continuousWorld: true,
 		  worldCopyJump: false,
-		  layers: [kuva]
-		}).setView([0, 0], 1);
-	//imagemap.on('click', addPP);
-
-	var southWest = imagemap.unproject([0, kuvaHeight], imagemap.getMaxZoom());
-	var northEast = imagemap.unproject([kuvaWidth, 0], imagemap.getMaxZoom());
-	var imagebounds = new L.LatLngBounds(southWest, northEast);
-	/*
-	imagemap.setMaxBounds(imagebounds);
-	*/
+		  maxZoom :7
+		}).setView([kuvaWidth/2,kuvaHeight/2], 3);
 	
-	#L.imageOverlay(kuvaUrl, imagebounds).addTo(imagemap);
+	var southWest = imagemap.unproject([0, kuvaWidth], imagemap.getMaxZoom());
+	var northEast = imagemap.unproject([kuvaHeight, 0], imagemap.getMaxZoom());
+	//imagemap.setMaxBounds(new L.LatLngBounds(southWest, northEast));
+	
+	var kuva = L.tileLayer.wms('http://localhost:8080/geoserver/gwc/service/wms',
+			{layers: 'georef:'+gsName,
+	    format: 'image/jpeg',
+	    continuousWorld: true,
+	    //transparent: true,
+	    attribution: 'SA'}).addTo(imagemap);
+	
+	imagemap.on('click', addPP);
 }
 
 function addGP(e){

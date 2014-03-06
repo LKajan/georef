@@ -27,20 +27,21 @@
 {% endblock %}
 
 {% block content %}
-	<div class="row" id="kuvaHeader">
-		{{ kuva.name }}
-	</div>
-	<div class="row" id="container">
+<div class="container-fluid fill">
+	<div class="row fill">
 		<div class="col-lg-6" id="imagemap"></div>
 		<div class="col-lg-6" id="map"></div>
 	</div>
-	
+    <div class="row" id="kuvaHeader">
+        {{ kuva.name }}
+        <button class="btn btn-primary">Tallenna</button>
+    </div>
 	<script>
 	
-	{% thumbnail kuva.jpgImage "x600" as im %}
-	var kuvaHeight = {{ im.height }};
-	var kuvaWidth = {{ im.width }};
-	var kuvaUrl = "{{ im.url }}";
-	{% endthumbnail %}
+	var kuvaHeight = {{ kuva.jpgImage.height }};
+	var kuvaWidth = {{ kuva.jpgImage.width }};
+	var gsName = "{{ kuva.gsName }}";
+	
 	</script>
+</div>
 {% endblock %}

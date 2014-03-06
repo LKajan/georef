@@ -1,9 +1,16 @@
-html, body, #sidebar, #container {
+html, body {
 	height: 100%;
 	margin: 0px;
 }
+
 body {
 	padding-top: 50px;
+}
+
+
+.fill{
+	margin: 0;
+	height: 100%;
 }
 
 #map {
@@ -20,4 +27,8 @@ body {
 /* 	-webkit-box-shadow: 0 -1px 10px rgba(0,0,0,0.5);
 	-moz-box-shadow: 0 -1px 10px rgba(0,0,0,0.5);
 	box-shadow: 0 -1px 10px rgba(0,0,0,0.5); */
+}
+
+#imagemap.leaflet-container{
+	background: #fff;
 }

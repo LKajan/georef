@@ -5,7 +5,7 @@ function paivitaKuvalista(data){
 		var thumbnail = $("<div>")
 			.addClass("thumbnail");
 		
-		$("<a>").attr("href", '/kuvat/kuva/'+this.id)
+		$("<a>").attr("href", '/georef/kuva/'+this.id)
 			.html(
 				$("<img>")
 				.attr("src", this.thumbnail)

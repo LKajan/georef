@@ -10,20 +10,42 @@ import json
 # Create your views here.
 
 def index(request):
-    return render_to_response("kuvat/index.html")
+    return render_to_response("georef/index.html")
 
 def kartta(request):
-    return render_to_response("kuvat/kartta.html")
+    return render_to_response("georef/kartta.html")
 
-def edit(request, kuva):
-    pass
+def georef(request, kuvaId):
+    kuva = get_object_or_404(Kuva, pk=kuvaId)
+
+    return render_to_response('georef/georef.html',
+                              {'kuva': kuva},
+                              context_instance=RequestContext(request))
+
 
 def imageInfo(request, kuva):
     kuva = get_object_or_404(Kuva, pk=kuva)
 
-    return render_to_response('kuvat/kuvaInfo.html',
+    return render_to_response('georef/kuvaInfo.html',
                               {'kuva': kuva},
                               context_instance=RequestContext(request))
+
+def imagesJson(request):
+    height = int(request.GET.get('height', 200))
+    limit = int(request.GET.get('limit', 12))
+    page = int(request.GET.get('page', 0))
+
+    kuvat = Kuva.objects.all()[page * limit:(page + 1) * limit]
+
+    data = []
+    for kuva in kuvat:
+        data.append({
+                    'id': kuva.id,
+                    'thumbnail': get_thumbnail(kuva.jpgImage, 'x{0:d}'.format(height)).url
+                    })
+
+    jsondata = json.dumps(data)
+    return HttpResponse(jsondata, content_type="application/json")
 
 def imagesGeojson(request):
     bbox = request.GET.get('bbox', None)
@@ -34,7 +56,7 @@ def imagesGeojson(request):
         except:
             return HttpResponseBadRequest()
 
-        kuvat = Kuva.objects.filter(geom__intersects=bboxGeom)
+        kuvat = Kuva.geoObjects.filter(geom__intersects=bboxGeom)
     else:
         kuvat = Kuva.objects.all()
 
