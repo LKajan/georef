@@ -8,6 +8,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
+import mimetypes
+
+mimetypes.add_type("image/svg+xml", ".svg", True)
+mimetypes.add_type("image/svg+xml", ".svgz", True)
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -28,6 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
+    'bootstrap3',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -37,8 +43,19 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'sorl.thumbnail',
     'taggit',
-    'georef'
+    'georef',
+    'djgeojson'
 )
+
+LEAFLET_CONFIG = {
+    'PLUGINS': {
+        'draw': {
+            'css': "leaflet/draw/leaflet.draw.css",
+            'js': "leaflet/draw/leaflet.draw.js",
+        },
+    }
+}
+
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

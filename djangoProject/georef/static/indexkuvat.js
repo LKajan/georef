@@ -1,6 +1,16 @@
+function readPage(page){
+	var pagenum;
+	if (typeof page=="number"){
+		pagenum = page;
+	} else {
+		pagenum = $(this).text();
+	}
+	$.getJSON(imageJsonUrl+"&page="+pagenum, paivitaKuvalista);
+}
 
 function paivitaKuvalista(data){
 	var ul = $( "#kuvalista" );
+	ul.empty();
 	$.each( data, function() {
 		var thumbnail = $("<div>")
 			.addClass("thumbnail");
@@ -16,6 +26,15 @@ function paivitaKuvalista(data){
 			.text(this.name)
 			.appendTo(thumbnail);
 		
+		var globe = $("<object>", {
+				'type': "image/svg+xml",
+				'data': globeUrl,
+				'class': 'globe'
+				})
+				.text("Your browser does not support SVG")
+		.appendTo(thumbnail);
+		
+		
 		$("<p>")
 			.text("paikannettu: "+ (this.georef ? "Kyllä" : "Ei"))
 			.appendTo(thumbnail);
@@ -25,3 +44,8 @@ function paivitaKuvalista(data){
 		.appendTo(ul);
 	});
 }
+
+$(function() {
+	$("#pagination span").click(readPage);
+	readPage(1);
+});

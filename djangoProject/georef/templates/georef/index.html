@@ -2,27 +2,56 @@
 
 {% load staticfiles %}
 {% load thumbnail %}
+{% load bootstrap3 %}
 
 {% block title %}
 	MIL-kuvat
 {% endblock %}
 
+{% comment %}
 {% block includes %}
-    <script type="text/javascript" src="{% static 'indexkuvat.js' %}"></script>
+    script type="text/javascript" src="{% static 'indexkuvat.js' %}"></script>
 {% endblock %}
+{% endcomment %}
 
 {% block content %}
 
 <div class="container">
 	<div class="row">
 		<h1>Kuvia</h1>
+		{% bootstrap_pagination kuvat %}
+		
 		<div id="kuvalista">
-
+			{% for kuva in kuvat %}
+			<div class="col-sm-6 col-md-4">
+	            <div class="thumbnail">
+	                <a href="{% url 'georef.views.imageInfo' kuva.pk %}">
+	                    {% thumbnail kuva.jpgImage "x200" as im %}
+	                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+	                    {% endthumbnail %}
+	                </a>
+	                <div>
+		                <h4>{{ kuva.name }}</h4>
+		                <a href="{% url 'georef.views.georef' kuva.pk %}">
+                          {% if kuva.geom %}
+                          <img class="globe" src="{% static 'images/globe.svg' %}">
+                          {% else %}
+                          <img class="globe" src="{% static 'images/globe.svg' %}">
+                          {% endif %}
+		                    {% comment %}
+			                <object class="globe {% if kuva.geom %}georefYes{% else %}georefNo{% endif %}" type="image/svg+xml" data="{% static 'images/globe.svg' %}">
+			                Your browser does not support SVG
+			                </object>
+			                {% endcomment %}
+		                </a>
+	                </div>
+	            </div>
+	        </div>
+	        {% endfor %}
 		</div>
+        {% bootstrap_pagination kuvat %}
 	</div>
 </div>
 
-<script>
-$.getJSON("{% url 'georef.views.imagesJson' %}?height=200", paivitaKuvalista);
-</script>
+
 {% endblock %}

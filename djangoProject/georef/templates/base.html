@@ -1,22 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fi">
     <head>
-        <meta charset="utf-8">
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <meta http-equiv="Content-Language" content="fi" />
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	    <!-- Bootstrap -->
 	    {% load staticfiles %}
-	    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-        <link rel="stylesheet" href="{% static "kuvat.css" %}">
-
-		<script type="text/javascript" src="{% static "jquery/jquery-1.10.2.js" %}"></script>
-		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-
-
-
+	    
+	    <script type="text/javascript" src="{% static "jquery/jquery-1.10.2.js" %}"></script>
+        <link rel="stylesheet" href="{% static 'kuvat.css' %}">
+        
+	    <!-- Bootstrap -->
+	    {% load bootstrap3 %}
+	    
+        {# Display django.contrib.messages as Bootstrap alerts #}
+        {% bootstrap_messages %}
+	    
+		{% bootstrap_css %}
+		{% bootstrap_javascript %}
 		
 		{% block includes %}{% endblock %}
 
-        <title>{% block title %}Template{% endblock %}</title>
+        <title>{% block title %}Kuvat{% endblock %}</title>
     </head>
     <body>
     

@@ -1,41 +1,82 @@
-from django.shortcuts import render, render_to_response, get_object_or_404, RequestContext
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.gis.geos import Polygon, GEOSGeometry, fromstr
+from django.contrib.gis.forms.widgets import BaseGeometryWidget
 from django.http import Http404, HttpResponse, HttpRequest, HttpResponseBadRequest
 
-from georef.models import Kuva
-from sorl.thumbnail import get_thumbnail
+from django.forms.models import inlineformset_factory
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from georef.models import Kuva, KuvaTyyppi, GCP
+from georef.forms import KuvaForm, GCPFormset
+from sorl.thumbnail import get_thumbnail
+from math import ceil
 import json
 
 # Create your views here.
 
 def index(request):
-    return render_to_response("georef/index.html")
+    page = int(request.GET.get('page', 1))
+
+    kuvalista = Kuva.objects.all()
+    paginator = Paginator(kuvalista, 12)
+
+    try:
+        kuvat = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        kuvat = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        kuvat = paginator.page(paginator.num_pages)
+
+    return render(request, "georef/index.html", {'kuvat': kuvat
+                                                 })
 
 def kartta(request):
-    return render_to_response("georef/kartta.html")
+    return render(request, "georef/kartta.html")
 
 def georef(request, kuvaId):
     kuva = get_object_or_404(Kuva, pk=kuvaId)
 
-    return render_to_response('georef/georef.html',
-                              {'kuva': kuva},
-                              context_instance=RequestContext(request))
+    if request.method == 'POST':
+        kuvaForm = KuvaForm(request.POST, instance=kuva)
+        gcpFormSet = GCPFormset(request.POST, request.FILES, instance=kuva)
+        if kuvaForm.is_valid() and gcpFormSet.is_valid():
+            kuvaForm.save()
+            gcpFormSet.save()
+
+            return redirect('georef.views.kartta')
+    else:
+        kuvaForm = KuvaForm(instance=kuva)
+        gcpFormSet = GCPFormset(instance=kuva)
+
+    return render(request, 'georef/georef.html',
+                              {'kuva': kuva,
+                               'form': kuvaForm,
+                               'gcpFormSet': gcpFormSet})
 
 
 def imageInfo(request, kuva):
     kuva = get_object_or_404(Kuva, pk=kuva)
 
-    return render_to_response('georef/kuvaInfo.html',
-                              {'kuva': kuva},
-                              context_instance=RequestContext(request))
+    return render(request, 'georef/kuvaInfo.html',
+                              {'kuva': kuva})
 
 def imagesJson(request):
     height = int(request.GET.get('height', 200))
-    limit = int(request.GET.get('limit', 12))
     page = int(request.GET.get('page', 0))
 
-    kuvat = Kuva.objects.all()[page * limit:(page + 1) * limit]
+    kuvalista = Kuva.objects.all()
+    paginator = Paginator(kuvalista, 12)
+
+    try:
+        kuvat = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        kuvat = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        kuvat = paginator.page(paginator.num_pages)
 
     data = []
     for kuva in kuvat:
@@ -80,6 +121,8 @@ def imagesGeojson(request):
     jsondata = json.dumps(data)
 
     return HttpResponse(jsondata, content_type="application/json")
+
+
 
 def updateImageGeom(request, kuva):
     image = get_object_or_404(Kuva, pk=kuva)

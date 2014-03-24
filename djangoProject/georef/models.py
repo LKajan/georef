@@ -22,10 +22,6 @@ class KuvaTyyppi(models.Model):
     tyyppi = models.CharField(max_length=2, choices=KUVATYYPIT)
 
 
-class GCP(models.Model):
-    ground = gismodels.PointField()
-    image = gismodels.PointField()
-
 def removeTabs(text):
     return ' '.join(text.split())
 
@@ -101,14 +97,14 @@ class Kuva(models.Model):
     name = models.CharField(max_length=256)
     kuvaus = models.TextField(blank=True, null=True)
     shootTime = models.DateTimeField(blank=True, null=True)
-    shootHeight = models.IntegerField(blank=True, null=True)
+    shootHeight = models.PositiveIntegerField(blank=True, null=True)
 
     jpgImage = models.ImageField(upload_to="kuvat")
     orginalFilePath = models.ImageField(upload_to="alkuperaiset", blank=True)
 
     tyyppi = models.ForeignKey(KuvaTyyppi, blank=True, null=True)
     geom = gismodels.GeometryField(blank=True, null=True, srid=3067, dim=2)
-    gcps = models.ManyToManyField(GCP, blank=True)
+
 
     tags = TaggableManager(blank=True)
 
@@ -138,6 +134,11 @@ class Kuva(models.Model):
                     '{:.1f}\n'.format(image.height - 0.5)
                     )
 
+class GCP(models.Model):
+    ground = gismodels.PointField(srid=4326, spatial_index=False)
+    image = gismodels.PointField(spatial_index=False)
+
+    kuva = models.ForeignKey(Kuva, related_name="gcps")
 
 class Mosaic(models.Model):
     fid = models.IntegerField(primary_key=True)
