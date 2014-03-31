@@ -1,24 +1,26 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.gis.geos import Polygon, GEOSGeometry, fromstr
-from django.contrib.gis.forms.widgets import BaseGeometryWidget
 from django.http import Http404, HttpResponse, HttpRequest, HttpResponseBadRequest
 
-from django.forms.models import inlineformset_factory
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from georef.models import Kuva, KuvaTyyppi, GCP
+from georef.models import Kuva, KuvaTyyppi, GCP, Mosaic
 from georef.forms import KuvaForm, GCPFormset
 from sorl.thumbnail import get_thumbnail
-from math import ceil
 import json
+from georef.georeference import Georeferencer
 
+import os
+from django.conf import settings
+from osgeo import gdal
 # Create your views here.
 
 def index(request):
     page = int(request.GET.get('page', 1))
+    size = int(request.GET.get('pageSize', 12))
 
     kuvalista = Kuva.objects.all()
-    paginator = Paginator(kuvalista, 12)
+    paginator = Paginator(kuvalista, size)
 
     try:
         kuvat = paginator.page(page)
@@ -38,12 +40,36 @@ def kartta(request):
 def georef(request, kuvaId):
     kuva = get_object_or_404(Kuva, pk=kuvaId)
 
+    ik = KuvaTyyppi.objects.get(tyyppi='ik')
+
     if request.method == 'POST':
         kuvaForm = KuvaForm(request.POST, instance=kuva)
         gcpFormSet = GCPFormset(request.POST, request.FILES, instance=kuva)
         if kuvaForm.is_valid() and gcpFormSet.is_valid():
-            kuvaForm.save()
+            kuva = kuvaForm.save(commit=False)
             gcpFormSet.save()
+
+            gcps = kuva.gcps.all()
+            src = os.path.join(settings.MEDIA_ROOT, kuva.orginalFilePath.name).replace('\\', '/')
+            dst = os.path.join(settings.TAUSTA_MOSAIC, u'images', kuva.name + u'.tif').replace('\\', '/')
+
+            poly = None
+            try:
+                gr = Georeferencer(src, gcps, dst)
+                poly = gr.getPoly()
+                kuva.geom = poly
+
+                if kuva.tyyppi == ik and poly is not None:
+                    gr.warp()
+                    mosaic = Mosaic(geom=poly,
+                                    location='images\\' + kuva.name + '.tif',
+                                    time=kuva.shootTime)
+                    mosaic.save()
+
+            except Exception as e:
+                print e
+
+            kuva.save()
 
             return redirect('georef.views.kartta')
     else:

@@ -105,6 +105,7 @@ MEDIA_URL = '/media/'
 
 
 ALKUPERAISET = u'C:/georef/alkuperaiset'
+TAUSTA_MOSAIC = u'C:/georef/tausta_mosaic'
 GEOSERVER = {'host': "http://localhost:8080/geoserver",
       'user': 'admin',
       'password': 'geoserver',

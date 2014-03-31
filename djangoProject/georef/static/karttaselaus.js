@@ -20,8 +20,8 @@ var jcarousel = $('.jcarousel');
 
 function aftermove(e){
 	var bounds = map.getBounds();
-	var sw = crs.project(bounds.getSouthWest());
-	var ne = crs.project(bounds.getNorthEast());
+	var sw = etrstm35.project(bounds.getSouthWest());
+	var ne = etrstm35.project(bounds.getNorthEast());
 	$.getJSON(kuvaUrl+"?bbox="+sw.x+","+sw.y+","+ne.x+","+ne.y, function (data) {
 		geojsonLayer.addData(data);
 		jcarousel
@@ -74,7 +74,7 @@ var geojsonLayer = L.Proj.geoJson(emptyGeoJson, {
 	  }
 });
 
-$(function() {
+function createMap(){
 	map = new L.Map('map', {
 	    crs: etrstm35,
 	    continuousWorld: true,
@@ -83,10 +83,14 @@ $(function() {
 	});
 	map.on('load', aftermove);
 	map.on('move', aftermove);
-
+	
 	L.control.layers({'peruskartta': peruskartta}, {'mil':mil}).addTo(map);
 	map.setView([60.1476, 25.0364], 11);
-	
+}
+
+$(function() {
+	createMap();
+
 	geojsonLayer.addTo(map);
 });
 

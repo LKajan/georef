@@ -11,16 +11,15 @@ from taggit.managers import TaggableManager
 
 
 class KuvaTyyppi(models.Model):
-    VIISTO = 'vk'
-    KOHDE = 'kk'
-    ILMA = 'ik'
     KUVATYYPIT = (
-        (VIISTO, 'Viistoilmakuva'),
-        (KOHDE, 'Kohde'),
-        (ILMA, 'Kohtisuora ilmakuva'),
+        ('ik', 'Kohtisuora ilmakuva'),
+        ('vk', 'Viistoilmakuva'),
+        ('kk', 'Kohde'),
     )
-    tyyppi = models.CharField(max_length=2, choices=KUVATYYPIT)
+    tyyppi = models.CharField(max_length=2, unique=True, choices=KUVATYYPIT)
 
+    def __unicode__(self):
+        return self.get_tyyppi_display()
 
 def removeTabs(text):
     return ' '.join(text.split())
@@ -141,7 +140,7 @@ class GCP(models.Model):
     kuva = models.ForeignKey(Kuva, related_name="gcps")
 
 class Mosaic(models.Model):
-    fid = models.IntegerField(primary_key=True)
+    fid = models.AutoField(primary_key=True)
     geom = gismodels.PolygonField(srid=3067)
     location = models.CharField(max_length=255)
     time = models.DateTimeField(blank=True, null=True)
